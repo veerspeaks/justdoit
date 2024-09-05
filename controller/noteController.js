@@ -62,7 +62,7 @@ exports.deleteNote = async (req, res) => {
         const userId = req.user._id;    
         const notename = req.params.notename;
         const noteModel = mongoose.connection.useDb('home').model(notename, Note.schema, notename);
-        await noteModel.deleteOne({ userId });
+        await noteModel.deleteOne({ user: userId });
         res.status(200).json('Note deleted');
     } catch (err) {
         console.error('Error deleting note:', err);
