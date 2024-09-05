@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Notes</title>
+    <link href="/css/tailwind.css" rel="stylesheet" />
+    <link href="/css/additional.css" rel="stylesheet" />
+  </head>
+  <body class="flex flex-col justify-center items-center">
+    <div class="flex justify-center mb-4">
+      <%- include('partials/_navbar') %>
+    </div>
+    <div
+      class="flex-col justify-center border border-2 mb-4 "
+      style="border-radius: 10px; padding: 20px; width: 80%;" 
+    >
+      <div class="bg-blue-500 border border-2 rounded-lg">
+        <h2
+          id="notes-header"
+          class="text-2xl font-bold mt-4 mb-4 text-center text-white"
+        ></h2>
+
+        <script>
+          // Extract the collection name from the URL
+          const currentUrl = window.location.pathname;
+          const segments = currentUrl.split("/");
+          const collectionName = segments[2]; // Assuming the collection name is the third segment in the URL
+        
+          // Set the header text to the collection name
+          document.getElementById("notes-header").textContent = collectionName;
+          
+        </script>
+      </div>
+
+      <div class="p-4" style="height: 500px">
+        <% let emptyNote = "Add a note here"; %>
+        <textarea
+          placeholder="<%= emptyNote %>"
+          style="height: 500px; margin-top: 10px;"
+          id="noteContent"
+          class="w-full h-64 border rounded-lg resize-none"
+        >
+        <% if(data.length > 0) { %><%= data[0].content %><% } %></textarea>
+      </div>
+      <%- include('partials/saveAndDeleteNote') %>
+      <div class="flex justify-center">
+        <button class="bg-blue-500 border border-2 rounded-lg mt-4 " style="width: 100px; height: 30px;" onclick="window.location.href='/';">
+            <a class="text-white" href="/">Back</a>
+          </button>
+      </div>
+      
+    </div>
+    
+  </body>
+</html>

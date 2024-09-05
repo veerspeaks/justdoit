@@ -1,0 +1,35 @@
+<input
+  class="searchbar rounded-lg border mx-16 w-16"
+  placeholder="  search for to-do list or notes"
+/>
+<button
+  class="searchbutton border rounded-lg"
+  style="
+    background-color: #2563eb;
+    color: white;
+    transition: background-color 0.3s;
+  "
+  onmouseover="this.style.backgroundColor='#1d4ed8'"
+  onmouseout="this.style.backgroundColor='#2563eb'"
+>
+  Search
+
+</button>
+
+<style>
+  .searchbar {
+    margin-right: 20px;
+    width: 30%;
+  }
+  .searchbutton {
+    padding-right: 20px;
+    padding-left: 20px;
+  }
+</style>
+
+<script>
+  document.querySelector('.searchbutton').addEventListener('click', function() {
+      const searchText = document.querySelector('.searchbar').value;
+      
+  });
+  </script>

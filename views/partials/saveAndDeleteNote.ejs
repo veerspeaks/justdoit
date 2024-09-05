@@ -1,0 +1,82 @@
+<div
+        class="flex justify-center"
+        style="border-top: 2px solid black; padding-top: 10px"
+      >
+        <button
+          class="saveButton mx-auto bg-blue-500 border-t border-2 rounded-lg"
+          style="
+            padding-left: 40px;
+            padding-right: 40px;
+            padding-top: 10px;
+            padding-bottom: 10px;
+            color: white;
+          "
+          onmouseover="this.style.backgroundColor='#1d4ed8'"
+          onmouseout="this.style.backgroundColor='#2563eb'"
+        >
+          Save
+        </button>
+        <button
+          class="deleteButton mx-auto border-t border-2 rounded-lg"
+          style="
+            background-color: #ff6666;
+            color: white;
+            padding-left: 40px;
+            padding-right: 40px;
+            padding-top: 10px;
+            padding-bottom: 10px;
+          "
+          onmouseover="this.style.backgroundColor='#ff0000'"
+          onmouseout="this.style.backgroundColor='#ff6666'"
+        >
+          Delete
+        </button>
+      </div>
+
+
+      <script>
+        
+        //add or update note 
+
+        document.querySelector('.saveButton').addEventListener('click', function() {
+        
+          const noteContent = document.querySelector('#noteContent').value;
+          const noteUrl = window.location.pathname;
+          const notesegments = currentUrl.split("/");
+          const noteName = notesegments[2]; 
+          const UpdateContent = async function (collectionName) {
+            
+            const response = await fetch(`/notes/${collectionName}/updatenote`,{
+                method: 'POST',
+                headers:{
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({noteContent})
+            })
+            const data = await response.json();
+            console.log(data);
+          }
+          UpdateContent(collectionName);
+        });
+
+        //delete note
+
+        document.querySelector('.deleteButton').addEventListener('click', function() {
+          const noteUrl = window.location.pathname;
+          const notesegments = currentUrl.split("/");
+          const noteName = notesegments[2]; 
+          const DeleteContent = async function (collectionName) {
+            const response = await fetch(`/notes/${collectionName}/deletenote`,{
+                method: 'DELETE'
+            })
+            const data = await response.json();
+            if(response.ok){
+              window.location.href = '/';
+            }
+            else{
+                console.log('Failed to delete note');
+            }
+          }
+          DeleteContent(collectionName);
+        });
+      </script>

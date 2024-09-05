@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>JustDoItmini</title>
+    <style>
+      .title {
+        font-weight: bold;
+        margin-bottom: 1rem;
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 2rem; /* Base size for small screens */
+      }
+
+      /* Medium screens */
+      @media (min-width: 640px) {
+        .title {
+          font-size: 4rem;
+        }
+      }
+
+      /* Large screens */
+      @media (min-width: 768px) {
+        .title {
+          font-size: 6rem;
+        }
+      }
+
+      /* Extra large screens */
+      @media (min-width: 1024px) {
+        .title {
+          font-size: 7rem;
+        }
+      }
+
+      /* 2XL screens */
+      @media (min-width: 1280px) {
+        .title {
+          font-size: 8rem;
+        }
+      }
+    </style>
+  </head>
+  <body class="w-full justify-content" >
+    <div class = "flex justify-center">
+        <%- include('partials/_navbar') %>
+    </div>
+      
+      <div class="w-full bg-gray-100" style="padding-top: 10rem; padding-bottom: 20rem;;">
+        <div class="w-full"><%- include('partials/_doListApp') %></div>
+        <div class="flex justify-center">
+          <button class="bg-blue-500 border border-2 rounded-lg mt-4 " style="width: 100px; height: 30px;" onclick="window.location.href='/';">
+              <a class="text-white" href="/">Back</a>
+            </button>
+        </div>
+      </div>
+      
+    </div>
+    
+  </body>
+</html>

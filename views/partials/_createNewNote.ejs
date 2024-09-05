@@ -1,0 +1,117 @@
+<!-- HTML -->
+<button
+  class="createNewNote rounded-lg border"
+  id ="createNewNote"
+  style="
+    width: 200px;
+    height: 50px;
+    margin-left: 20px;
+    margin-right: 20px;
+    background-color: #2563eb;
+    color: white;
+    transition: background-color 0.3s;
+  "
+  onmouseover="this.style.backgroundColor='#1d4ed8'"
+  onmouseout="this.style.backgroundColor='#2563eb'"
+>
+  Create new Note
+</button>
+
+<div id="floatingBoxNote" class="hidden">
+  <textarea class="w-full" id="textBoxNote" placeholder="Name of the note"></textarea>
+  <button  class="text-white" id="createButtonNote" style="width: 100px; height: 30px; border-radius: 10px; border: none; margin-top: 10px; margin-left:35px" onmouseover="this.style.backgroundColor='#1d4ed8'"
+  onmouseout="this.style.backgroundColor='#2563eb'">Create</button>
+</div>
+
+<!-- CSS -->
+<style>
+  .hidden {
+  display: none;
+}
+
+#floatingBoxNote {
+  position: absolute;
+  border-radius: 10px;
+  
+  width: 200px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  background-color: #fff;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+#floatingBoxNote::before {
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 10px 10px 0 10px;
+  border-color: #fff transparent transparent transparent;
+  top: -10px;
+  left: 20px;
+}
+</style>
+
+<!-- JS -->
+<script>
+  document.querySelector('.createNewNote').addEventListener('click', function(event) {
+  showFloatingBoxNote(event, this);
+});
+
+document.getElementById('createButtonNote').addEventListener('click', function() {
+  const textBoxValue = document.getElementById('textBoxNote').value;
+  
+
+  async function sendRequest() {
+    try {
+      const response = await fetch(`/notes/${textBoxValue}/createnotes`, {
+        method: 'POST',
+        
+        body: JSON.stringify({ textBoxValue }),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      const jsonResponse = await response.json();
+      console.log(jsonResponse)
+      
+      
+      hideFloatingBoxNote();
+      window.location.href = `/notes/${jsonResponse.notename}`;
+    } catch (error) {
+      console.log("Couldn't get any response", error);
+    }
+  }
+
+  sendRequest();
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+  document.addEventListener('click', function(event) {
+    if (event.target.id !== 'createNewNote' && event.target.id !== 'createButtonNote' && event.target.id !== 'textBoxNote') {
+      hideFloatingBoxNote();
+
+    }
+  });
+});
+
+function showFloatingBoxNote(event, button) {
+  const floatingBox = document.getElementById('floatingBoxNote');
+  floatingBox.classList.remove('hidden');
+  const rect = button.getBoundingClientRect();
+  floatingBox.style.top = `${rect.bottom + window.scrollY}px`;
+  floatingBox.style.left = `${rect.left + window.scrollX}px`;
+}
+
+function hideFloatingBoxNote() {
+  const floatingBox = document.getElementById('floatingBoxNote');
+  floatingBox.classList.add('hidden');
+  document.getElementById('textBoxNote').value = '';
+}
+</script>
