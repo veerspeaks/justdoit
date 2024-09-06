@@ -5,7 +5,7 @@ const passport = require('passport')
 exports.signin = async (req, res) => {
     try {
         // Your logic for handling sign-in
-        res.render('signin')
+        res.render('signin', { isSignInPage: true })
     } catch (error) {
         res.status(500).send({ message: "Sign-in failed", error });
     }
@@ -14,7 +14,7 @@ exports.signin = async (req, res) => {
 exports.signup = async (req,res) => {
     try{
         
-        res.render('signup')
+        res.render('signup', { isSignUpPage: true })
 
     }catch(e) {
         res.status(500).send({ message: "Sign-in failed", e});

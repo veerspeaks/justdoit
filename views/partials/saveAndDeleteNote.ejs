@@ -1,88 +1,100 @@
-<div
-        class="flex justify-center"
-        style="border-top: 2px solid black; padding-top: 10px"
-      >
-        <button
-        
-          class="saveButton mx-auto bg-blue-500 border-t border-2 rounded-lg"
-          style="
-            padding-left: 40px;
-            padding-right: 40px;
-            padding-top: 10px;
-            padding-bottom: 10px;
-            color: white;
-          "
-          onmouseover="this.style.backgroundColor='#1d4ed8'"
-          onmouseout="this.style.backgroundColor='#2563eb'"
-        >
-          Save
-        </button>
-        <button
-          class="deleteButton mx-auto border-t border-2 rounded-lg"
-          style="
-            background-color: #ff6666;
-            color: white;
-            padding-left: 40px;
-            padding-right: 40px;
-            padding-top: 10px;
-            padding-bottom: 10px;
-          "
-          onmouseover="this.style.backgroundColor='#ff0000'"
-          onmouseout="this.style.backgroundColor='#ff6666'"
-        >
-          Delete
-        </button>
-      </div>
+<div style="display: flex; justify-content: center; border-top: 2px solid black; padding-top: 15px; gap: 20px;">
+  <!-- Save Button -->
+  <button
+    class="saveButton"
+    style="
+      display: flex;
+      align-items: center;
+      background-color: #007bff;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+    "
+    onmouseover="this.style.backgroundColor='#0069d9'"
+    onmouseout="this.style.backgroundColor='#007bff'"
+  >
+    <!-- Save Icon (Floppy Disk) -->
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="currentColor" style="margin-right: 8px;">
+      <path d="M0 0h24v24H0z" fill="none"/>
+      <path d="M17 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm0 16H5V5h11v4h4v10zM6 6h9v4H6V6zm0 12v-2h6v2H6z"/>
+    </svg>
+    Save
+  </button>
 
+  <!-- Delete Button -->
+  <button
+    class="deleteButton"
+    style="
+      display: flex;
+      align-items: center;
+      background-color: #dc3545;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+    "
+    onmouseover="this.style.backgroundColor='#c82333'"
+    onmouseout="this.style.backgroundColor='#dc3545'"
+  >
+    <!-- Delete Icon (Trash Can) -->
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="currentColor" style="margin-right: 8px;">
+      <path d="M0 0h24v24H0z" fill="none"/>
+      <path d="M9 3v1H4v2h16V4h-5V3h-6zM5 6v14c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V6H5zm4 12H7V8h2v10zm6 0h-2V8h2v10z"/>
+    </svg>
+    Delete
+  </button>
+</div>
 
-      <script>
-        
-        //add or update note 
+<script>
+  // Add or update note
+  document.querySelector('.saveButton').addEventListener('click', function() {
+    const noteContent = document.querySelector('#noteContent').value;
+    const noteUrl = window.location.pathname;
+    const notesegments = noteUrl.split("/");
+    const collectionName = notesegments[2]; 
 
-        document.querySelector('.saveButton').addEventListener('click', function() {
-        
-          const noteContent = document.querySelector('#noteContent').value;
-          const noteUrl = window.location.pathname;
-          const notesegments = currentUrl.split("/");
-          const noteName = notesegments[2]; 
-          const UpdateContent = async function (collectionName) {
-            
-            const response = await fetch(`/notes/${collectionName}/updatenote`,{
-                method: 'POST',
-                headers:{
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({noteContent})
-            })
-            const data = await response.json();
-            if (response.ok) {
-                window.location.href = '/';
-            } else {
-                console.log('Failed to save note');
-            }
-            
-          }
-          UpdateContent(collectionName);
-        });
+    const UpdateContent = async function (collectionName) {
+      const response = await fetch(`/notes/${collectionName}/updatenote`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ noteContent })
+      });
+      const data = await response.json();
+      if (response.ok) {
+        window.location.href = '/';
+      } else {
+        console.log('Failed to save note');
+      }
+    };
+    UpdateContent(collectionName);
+  });
 
-        //delete note
+  // Delete note
+  document.querySelector('.deleteButton').addEventListener('click', function() {
+    const noteUrl = window.location.pathname;
+    const notesegments = noteUrl.split("/");
+    const collectionName = notesegments[2]; 
 
-        document.querySelector('.deleteButton').addEventListener('click', function() {
-          const noteUrl = window.location.pathname;
-          const notesegments = currentUrl.split("/");
-          const noteName = notesegments[2]; 
-          const DeleteContent = async function (collectionName) {
-            const response = await fetch(`/notes/${collectionName}/deletenote`,{
-                method: 'DELETE'
-            })
-            const data = await response.json();
-            if(response.ok){
-              window.location.href = '/';
-            }
-            else{
-                console.log('Failed to delete note');
-            }
-          }
-          DeleteContent(collectionName);
-        });
-      </script>
+    const DeleteContent = async function (collectionName) {
+      const response = await fetch(`/notes/${collectionName}/deletenote`, {
+        method: 'DELETE'
+      });
+      const data = await response.json();
+      if (response.ok) {
+        window.location.href = '/';
+      } else {
+        console.log('Failed to delete note');
+      }
+    };
+    DeleteContent(collectionName);
+  });
+</script>

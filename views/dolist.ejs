@@ -39,19 +39,28 @@
           font-size: 8rem;
         }
       }
+
+      
     </style>
   </head>
   <body class="w-full justify-content" >
-    <div class = "flex justify-center">
+    <div class="flex flex-row items-center w-full">
+      <div class="mr-4">
+        <a href="/" style="padding: 0.5rem; height:103px; background-color: #113647; transition-property: background-color; transition-duration: 300ms; display: flex; align-items: center; justify-content: center;">
+          <svg xmlns="http://www.w3.org/2000/svg" style="height: 1.5rem; width: 1.5rem; color: white;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+          </svg>
+        </a>
+      </div>
+      <div class="navbar flex-grow flex justify-center">
         <%- include('partials/_navbar') %>
+      </div>
     </div>
       
       <div class="w-full bg-gray-100" style="padding-top: 10rem; padding-bottom: 20rem;;">
         <div class="w-full"><%- include('partials/_doListApp') %></div>
         <div class="flex justify-center">
-          <button class="bg-blue-500 border border-2 rounded-lg mt-4 " style="width: 100px; height: 30px;" onclick="window.location.href='/';">
-              <a class="text-white" href="/">Back</a>
-            </button>
+          
         </div>
       </div>
       

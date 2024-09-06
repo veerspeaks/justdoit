@@ -1,77 +1,127 @@
+<nav class="navbar">
+  <!-- Brand Logo -->
+  <a href="/" class="navbar-brand">just-do-It</a>
+
+  <!-- Navigation Links -->
+  <div class="nav-links">
+    
+  </div>
+
+  <!-- Conditional Button -->
+  <% if (typeof isSignUpPage !== 'undefined' && isSignUpPage) { %>
+    <button class="sign-in-button">
+      <a href="/signin" style="color: white; text-decoration: none;">Sign In</a>
+    </button>
+  <% } else if (typeof isSignInPage !== 'undefined' && isSignInPage) { %>
+    <button class="sign-up-button">
+      <a href="/signup" style="color: white; text-decoration: none;">Sign Up</a>
+    </button>
+  <% } else { %>
+    <button class="sign-out-button">
+      <a href="/signout" style="color: white; text-decoration: none;">Sign Out</a>
+    </button>
+  <% } %>
+  <!-- Debug output -->
+  <div style="display: none;">
+    isSignInPage: <%= typeof isSignInPage !== 'undefined' ? isSignInPage : 'undefined' %>
+  </div>
+</nav>
+
 <style>
-  .title {
+  /* Navbar Styling */
+  .navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 10px;
+    background-color: #234b5e;
+    width: 100%;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+
+  /* Logo and Links */
+  .navbar-brand {
+    font-size: 1.8rem;
     font-weight: bold;
-    margin-bottom: 2rem;
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 5rem;
-    margin-top: 2rem;
-    /* Base size for small screens */
+    color: #ffffff;
+    text-decoration: none;
   }
 
-  /* Medium screens */
-  @media (min-width: 640px) {
-    .title {
-      font-size: 7rem;
+  .nav-links {
+    display: flex;
+    gap: 20px;
+  }
+
+  .nav-link {
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 1.1rem;
+    padding: 10px;
+    position: relative;
+  }
+
+  .nav-link:hover::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 3px;
+    background-color: #ff5722;
+    bottom: 0;
+    left: 0;
+  }
+
+  .sign-up-button,
+  .sign-out-button {
+    padding: 8px 15px;
+    color: #ffffff;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+  }
+  .sign-in-button,
+  .sign-up-button,
+  .sign-out-button {
+    padding: 8px 15px;
+    color: #ffffff;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+  }
+
+  .sign-up-button {
+    background-color: #4CAF50;
+  }
+
+  .sign-up-button:hover {
+    background-color: #45a049;
+  }
+
+  .sign-in-button {
+    background-color: #6a4caf;
+  }
+
+  .sign-in-button:hover {
+    background-color: #7b45a0;
+  }
+
+  .sign-out-button {
+    background-color: #ff5722;
+  }
+
+  .sign-out-button:hover {
+    background-color: #e64a19;
+  }
+
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .nav-links {
+      display: none;
     }
-  }
 
-  /* Large screens */
-  @media (min-width: 768px) {
-    .title {
-      margin-top: 1rem;
-      font-size: 7rem;
-    }
-  }
-
-  /* Extra large screens */
-  @media (min-width: 1024px) {
-    .title {
-      margin-top: 1rem;
-      font-size: 7rem;
-    }
-  }
-
-  /* 2XL screens */
-  @media (min-width: 1280px) {
-    .title {
-      font-size: 8rem;
+    .menu-toggle {
+      display: block;
     }
   }
 </style>
-
-<head>
-  <style>
-    /* Default styles for the Sign In button */
-    .sign-in-button {
-      padding: 10px 10px;
-      font-size: 16px;
-      
-    }
-  
-    /* Media query for smaller screens */
-    @media (max-width: 640px) {
-      .sign-in-button {
-        padding: 5px 8px !important; /* Smaller padding */
-        font-size: 12px !important;  /* Smaller font size */
-      }
-    }
-  </style>
-  
-  <div class="relative flex flex-col justify-center items-center w-full">
-    <span class="title text-2xl sm:text-6xl md:text-6xl lg:text-7xl xl:text-8xl font-bold mb-4 mx-auto">
-      just-do-It
-    </span>
-    <div class="">
-      <button class="text-white font-bold rounded-lg sign-in-button" style="background-color: #ff0000;">
-        <a href="/signout"> Sign Out</a>
-      </button>
-    </div>
-  </div>
-  
-  
-
-</head>
-
-</body>
-
-</html>

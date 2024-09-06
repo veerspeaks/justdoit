@@ -8,31 +8,53 @@
     <link href="/css/additional.css" rel="stylesheet" />
   </head>
   <body class="flex flex-col justify-center items-center">
-    <div class="flex justify-center mb-4">
-      <%- include('partials/_navbar') %>
+    <div class="flex flex-row items-center w-full">
+      <div class="mr-4">
+        <a href="/" style="padding: 0.5rem; height:103px; background-color: #113647; transition-property: background-color; transition-duration: 300ms; display: flex; align-items: center; justify-content: center;">
+          <svg xmlns="http://www.w3.org/2000/svg" style="height: 1.5rem; width: 1.5rem; color: white;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+          </svg>
+        </a>
+      </div>
+      <div class="navbar flex-grow flex justify-center">
+        <%- include('partials/_navbar') %>
+      </div>
     </div>
+    
     <div
       class="flex-col justify-center border border-2 mb-4 "
-      style="border-radius: 10px; padding: 20px; width: 80%;" 
+      style="border-radius: 10px; padding: 40px; width: 80%;" 
     >
-      <div class="bg-blue-500 border border-2 rounded-lg">
+      <div class="bg-gray-900 border-2 border-gray-700 rounded-lg shadow-lg p-4 mb-4">
         <h2
           id="notes-header"
-          class="text-2xl font-bold mt-4 mb-4 text-center text-white"
+          class="text-3xl font-bold text-center text-white mb-4"
         ></h2>
 
         <script>
           // Extract the collection name from the URL
-            const currentUrl = window.location.pathname;
-            const segments = currentUrl.split("/");
-            let collectionName = segments[2]; // Assuming the collection name is the third segment in the URL
-            
-            // Decode the collection name to handle spaces and special characters
-            collectionName = decodeURIComponent(collectionName);
+          const currentUrl = window.location.pathname;
+          const segments = currentUrl.split("/");
+          const encodedCollectionName = segments[2]; // Assuming the collection name is the third segment in the URL
+          const collectionName = decodeURIComponent(encodedCollectionName);
+
+          // Set the header text to the decoded collection name
+          const header = document.getElementById("notes-header");
+          header.textContent = collectionName;
           
-            // Set the header text to the collection name
-            document.getElementById("notes-header").textContent = collectionName;
+          // Make the text a lot larger
+          header.style.fontSize = "2rem"; // Increase font size significantly
           
+          // Add a subtle animation to the header
+          header.style.opacity = "0";
+          header.style.color = "#113647";
+          header.style.transform = "translateY(-20px)";
+          header.style.transition = "opacity 0.5s ease-out, transform 0.5s ease-out, font-size 0.5s ease-out";
+          
+          setTimeout(() => {
+            header.style.opacity = "1";
+            header.style.transform = "translateY(0)";
+          }, 100);
         </script>
       </div>
 
@@ -40,21 +62,19 @@
         <% let emptyNote = "Add a note here"; %>
         <textarea
           placeholder="<%= emptyNote %>"
-          style="height: 500px; margin-top: 10px;"
+          style="height: 500px; margin-top: 10px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);"
           id="noteContent"
           class="w-full h-64 border rounded-lg resize-none"
         >
         <% if(data.length > 0) { %><%= data[0].content %><% } %></textarea>
       </div>
-      <%- include('partials/saveAndDeleteNote') %>
-      <div class="flex justify-center">
-        <button class="bg-blue-500 border border-2 rounded-lg mt-4 " style="width: 100px; height: 30px;" onclick="window.location.href='/';">
-            <a class="text-white" href="/">Back</a>
-          </button>
+      <div style="margin-top: 20px;">
+        <%- include('partials/saveAndDeleteNote') %>
       </div>
+      
       
     </div>
     
-  </body>
+  </body> 
   <%- include('partials/_footer') %>
 </html>

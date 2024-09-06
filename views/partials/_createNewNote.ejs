@@ -1,117 +1,272 @@
 <!-- HTML -->
-<button
-  class="createNewNote rounded-lg border"
-  id ="createNewNote"
-  style="
-    width: 200px;
-    height: 50px;
-    margin-left: 20px;
-    margin-right: 20px;
-    background-color: #2563eb;
-    color: white;
-    transition: background-color 0.3s;
-  "
-  onmouseover="this.style.backgroundColor='#1d4ed8'"
-  onmouseout="this.style.backgroundColor='#2563eb'"
->
-  Create new Note
-</button>
+<div class="toggleContainer">
+  <span class="createText">Create</span>
+  <button
+    class="toggleButton rounded-full border"
+    id="toggleButton"
+    style="
+      width: 60px;
+      height: 60px;
+      background-color: #e3342f;
+      color: white;
+      font-size: 28px;
+      line-height: 60px;
+      text-align: center;
+      transition: background-color 0.3s, transform 0.3s;
+      border-radius: 50%; /* Make the button circular */
+      position: fixed;
+      bottom: 60px; /* Adjusted to be higher */
+      right: 20px;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    "
+    onmouseover="this.style.backgroundColor='#cc1f1a'"
+    onmouseout="this.style.backgroundColor='#e3342f'"
+  >
+    +
+  </button>
+
+  <div id="optionsBox" class="hidden">
+    <button
+      class="createNewNote rounded-lg border"
+      id="createNewNote"
+      style="
+        width: 200px;
+        height: 50px;
+        margin: 10px 0;
+        background-color: #e3342f;
+        color: white;
+        transition: background-color 0.3s;
+      "
+      onmouseover="this.style.backgroundColor='#cc1f1a'"
+      onmouseout="this.style.backgroundColor='#e3342f'"
+    >
+      Create new Note
+    </button>
+    <button
+      class="createNewTodo rounded-lg border"
+      id="createNewTodo"
+      style="
+        width: 200px;
+        height: 50px;
+        margin: 10px 0;
+        background-color: #e3342f;
+        color: white;
+        transition: background-color 0.3s;
+      "
+      onmouseover="this.style.backgroundColor='#cc1f1a'"
+      onmouseout="this.style.backgroundColor='#e3342f'"
+    >
+      Create new To-Do
+    </button>
+  </div>
+</div>
 
 <div id="floatingBoxNote" class="hidden">
-  <textarea class="w-full" id="textBoxNote" placeholder="Name of the note"></textarea>
-  <button  class="text-white" id="createButtonNote" style="width: 100px; height: 30px; border-radius: 10px; border: none; margin-top: 10px; margin-left:35px; background-color: #2563eb;" onmouseover="this.style.backgroundColor='#1d4ed8'"
-  onmouseout="this.style.backgroundColor='#2563eb'">Create</button>
+  <textarea class="w-full p-2 border rounded-lg" id="textBoxNote" placeholder="Name of the note"></textarea>
+  <button class="text-white mt-2" id="createButtonNote" style="width: 100%; height: 40px; border-radius: 10px; border: none; background-color: #e3342f;" onmouseover="this.style.backgroundColor='#cc1f1a'"
+  onmouseout="this.style.backgroundColor='#e3342f'">Create</button>
+</div>
+
+<div id="floatingBoxTodo" class="hidden">
+  <textarea class="w-full p-2 border rounded-lg" id="textBoxTodo" placeholder="Name of the to-do"></textarea>
+  <button class="text-white mt-2" id="createButtonTodo" style="width: 100%; height: 40px; border-radius: 10px; border: none; background-color: #e3342f;" onmouseover="this.style.backgroundColor='#cc1f1a'"
+  onmouseout="this.style.backgroundColor='#e3342f'">Create</button>
 </div>
 
 <!-- CSS -->
 <style>
   .hidden {
-  display: none;
-}
+    display: none;
+  }
 
-#floatingBoxNote {
-  position: absolute;
-  border-radius: 10px;
-  
-  width: 200px;
-  padding: 10px;
-  border: 1px solid #ccc;
-  background-color: #fff;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-}
+  .toggleContainer {
+    position: relative;
+  }
 
-#floatingBoxNote::before {
-  content: "";
-  position: absolute;
-  width: 0;
-  height: 0;
-  border-style: solid;
-  border-width: 10px 10px 0 10px;
-  border-color: #fff transparent transparent transparent;
-  top: -10px;
-  left: 20px;
-}
+  .createText {
+    position: fixed;
+    bottom: 75px;
+    right: 90px;
+    font-size: 20px;
+    color: #e3342f;
+  }
+
+  @media (max-width: 768px) {
+    .createText {
+      display: none;
+    }
+  }
+
+  #optionsBox {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 10px;
+    position: fixed;
+    bottom: 130px; /* Adjusted to be higher */
+    right: 20px;
+    transition: opacity 0.3s, visibility 0.3s, transform 0.3s;
+    opacity: 0;
+    visibility: hidden;
+    transform: scale(0);
+  }
+
+  #optionsBox.show {
+    opacity: 1;
+    visibility: visible;
+    transform: scale(1);
+  }
+
+  #floatingBoxNote, #floatingBoxTodo {
+    position: fixed;
+    border-radius: 10px;
+    width: 200px;
+    height: 150px; /* Explicitly set height */
+    padding: 10px;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    right: 80px; /* Position to the left of the button */
+  }
+
+  #floatingBoxNote {
+    bottom: 130px; /* Adjusted to be higher */
+  }
+
+  #floatingBoxTodo {
+    bottom: 130px; /* Adjusted to be higher */
+  }
+
+  #floatingBoxNote::before, #floatingBoxTodo::before {
+    content: "";
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 10px 10px 10px 0;
+    border-color: transparent #fff transparent transparent;
+    top: 10px;
+    right: -10px;
+  }
 </style>
 
 <!-- JS -->
 <script>
+  document.getElementById('toggleButton').addEventListener('click', function() {
+    const optionsBox = document.getElementById('optionsBox');
+    optionsBox.classList.toggle('show');
+    this.classList.toggle('active');
+    hideFloatingBoxes();
+  });
+
   document.querySelector('.createNewNote').addEventListener('click', function(event) {
-  showFloatingBoxNote(event, this);
-});
+    showFloatingBoxNote(event, this);
+  });
 
-document.getElementById('createButtonNote').addEventListener('click', function() {
-  const textBoxValue = document.getElementById('textBoxNote').value;
-  
+  document.querySelector('.createNewTodo').addEventListener('click', function(event) {
+    showFloatingBoxTodo(event, this);
+  });
 
-  async function sendRequest() {
-    try {
-      const response = await fetch(`/notes/${textBoxValue}/createnotes`, {
-        method: 'POST',
-        
-        body: JSON.stringify({ textBoxValue }),
-        headers: {
-          'Content-Type': 'application/json'
+  document.getElementById('createButtonNote').addEventListener('click', function() {
+    const textBoxValue = document.getElementById('textBoxNote').value;
+
+    async function sendRequest() {
+      try {
+        const response = await fetch(`/notes/${textBoxValue}/createnotes`, {
+          method: 'POST',
+          body: JSON.stringify({ textBoxValue }),
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
         }
-      });
 
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
+        const jsonResponse = await response.json();
+        console.log(jsonResponse);
+
+        hideFloatingBoxNote();
+        window.location.href = `/notes/${jsonResponse.notename}`;
+      } catch (error) {
+        console.log("Couldn't get any response", error);
       }
-
-      const jsonResponse = await response.json();
-      console.log(jsonResponse)
-      
-      
-      hideFloatingBoxNote();
-      window.location.href = `/notes/${jsonResponse.notename}`;
-    } catch (error) {
-      console.log("Couldn't get any response", error);
     }
+
+    sendRequest();
+  });
+
+  document.getElementById('createButtonTodo').addEventListener('click', function() {
+    const textBoxValue = document.getElementById('textBoxTodo').value;
+
+    async function sendRequest() {
+      try {
+        const response = await fetch('/createtodo', {
+          method: 'POST',
+          body: JSON.stringify({ textBoxValue }),
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+
+        const jsonResponse = await response.json();
+
+        hideFloatingBoxTodo();
+        window.location.href = `/dolist/${jsonResponse.todo}`;
+      } catch (error) {
+        console.log("Couldn't get any response", error);
+      }
+    }
+
+    sendRequest();
+  });
+
+  document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('click', function(event) {
+      if (!event.target.closest('#toggleButton') && !event.target.closest('#optionsBox') && !event.target.closest('#floatingBoxNote') && !event.target.closest('#floatingBoxTodo')) {
+        hideFloatingBoxes();
+      }
+    });
+  });
+
+  function showFloatingBoxNote(event, button) {
+    const floatingBox = document.getElementById('floatingBoxNote');
+    floatingBox.classList.remove('hidden');
+    const rect = button.getBoundingClientRect();
+    floatingBox.style.top = `${rect.top + window.scrollY}px`;
+    floatingBox.style.left = `${rect.left - floatingBox.offsetWidth - 10 + window.scrollX}px`;
   }
 
-  sendRequest();
-});
+  function showFloatingBoxTodo(event, button) {
+    const floatingBox = document.getElementById('floatingBoxTodo');
+    floatingBox.classList.remove('hidden');
+    const rect = button.getBoundingClientRect();
+    floatingBox.style.top = `${rect.top + window.scrollY}px`;
+    floatingBox.style.left = `${rect.left - floatingBox.offsetWidth - 10 + window.scrollX}px`;
+  }
 
-document.addEventListener('DOMContentLoaded', function() {
-  document.addEventListener('click', function(event) {
-    if (event.target.id !== 'createNewNote' && event.target.id !== 'createButtonNote' && event.target.id !== 'textBoxNote') {
-      hideFloatingBoxNote();
+  function hideFloatingBoxNote() {
+    const floatingBox = document.getElementById('floatingBoxNote');
+    floatingBox.classList.add('hidden');
+    document.getElementById('textBoxNote').value = '';
+  }
 
-    }
-  });
-});
+  function hideFloatingBoxTodo() {
+    const floatingBox = document.getElementById('floatingBoxTodo');
+    floatingBox.classList.add('hidden');
+    document.getElementById('textBoxTodo').value = '';
+  }
 
-function showFloatingBoxNote(event, button) {
-  const floatingBox = document.getElementById('floatingBoxNote');
-  floatingBox.classList.remove('hidden');
-  const rect = button.getBoundingClientRect();
-  floatingBox.style.top = `${rect.bottom + window.scrollY}px`;
-  floatingBox.style.left = `${rect.left + window.scrollX}px`;
-}
-
-function hideFloatingBoxNote() {
-  const floatingBox = document.getElementById('floatingBoxNote');
-  floatingBox.classList.add('hidden');
-  document.getElementById('textBoxNote').value = '';
-}
+  function hideFloatingBoxes() {
+    hideFloatingBoxNote();
+    hideFloatingBoxTodo();
+  }
 </script>
