@@ -31,11 +31,12 @@ exports.updateNote = async (req, res) => {
         );
 
         if (updateResult.upsertedCount > 0) {
-            res.status(201).json('New note created');
+            res.status(201).json({ message: 'New note created', redirect: '/' });
+            
         } else if (updateResult.modifiedCount > 0) {
-            res.status(200).json('Note updated');
+            res.status(200).json({ message: 'Note updated', redirect: '/' });
         } else {
-            res.status(200).json('No changes made to the note');
+            res.status(200).json({ message: 'No changes made to the note', redirect: '/' }  );
         }
     } catch (err) {
         console.error('Database error:', err);
