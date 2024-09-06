@@ -23,12 +23,15 @@
 
         <script>
           // Extract the collection name from the URL
-          const currentUrl = window.location.pathname;
-          const segments = currentUrl.split("/");
-          const collectionName = segments[2]; // Assuming the collection name is the third segment in the URL
-        
-          // Set the header text to the collection name
-          document.getElementById("notes-header").textContent = collectionName;
+            const currentUrl = window.location.pathname;
+            const segments = currentUrl.split("/");
+            let collectionName = segments[2]; // Assuming the collection name is the third segment in the URL
+            
+            // Decode the collection name to handle spaces and special characters
+            collectionName = decodeURIComponent(collectionName);
+          
+            // Set the header text to the collection name
+            document.getElementById("notes-header").textContent = collectionName;
           
         </script>
       </div>
