@@ -1,310 +1,299 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>To-Do List</title>
-
     <link href="/css/tailwind.css" rel="stylesheet" />
     <style>
-      .editable {
-        outline: none;
-        border: 1px solid #ccc;
-        border-radius: 0.375rem;
-        padding: 0.5rem;
-      }
-
-      .icon-button {
-        width: 1.5rem;
-        height: 1.5rem;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-      }
+        .editable {
+            outline: none;
+            border: 1px solid #ccc;
+            border-radius: 0.375rem;
+            padding: 0.5rem;
+        }
+        .icon-button {
+            width: 1.5rem;
+            height: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
     </style>
-  </head>
-
-  <body class="bg-gray-100 flex items-center justify-center min-h-screen">
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
     <div class="w-full max-w-md mx-auto bg-white p-6 rounded-lg shadow-lg">
-      <h2 class="text-xl font-bold mb-4 text-center">
-        <h2
-          id="collection-header"
-          class="text-2xl font-bold mb-4 text-center"
-        ></h2>
-
+        <h2 class="text-xl font-bold mb-4 text-center">
+            <h2 id="collection-header" class="text-2xl font-bold mb-4 text-center"></h2>
+        </h2>
         <script>
-          // Extract the collection name from the URL
-          const currentUrl = window.location.pathname;
-          const segments = currentUrl.split("/");
-          const collectionName = segments[2]; // Assuming the collection name is the third segment in the URL
-
-          // Set the header text to the collection name
-          document.getElementById("collection-header").textContent =
-            collectionName;
-        </script>
-      
-
-
-      <ul id="todo-list" class="mt-4 space-y-2"></ul>
-
-      <form id="todo-form" method="POST" class="mt-4 flex">
-        <input
-          type="text"
-          name="todoText"
-          id="todo-input"
-          class="flex-grow border border-gray-300 rounded-l-lg p-2"
-          placeholder="Add new task"
-        />
-        <button
-          type="submit"
-          id="add-todo-button"
-          class="bg-blue-500 text-white p-2 rounded-r-lg hover:bg-blue-600"
-        >
-          Add
-        </button>
-      </form>
-    </div>
-
-    <script>
-      const todoInput = document.getElementById('todo-input');
-      const todoList = document.getElementById('todo-list');
-      const todoForm = document.getElementById('todo-form');
-
-      // Fixed JSON embedding in EJS. Added a safe escape for special characters.
-      const data = <%- JSON.stringify(data).replace(/</g, '\\u003c') %>;
-
-
-
-      // Display existing data
-      document.addEventListener('DOMContentLoaded', () => {
-        data.forEach(item => {
-
-          const li = document.createElement('li');
-          li.className = "flex items-center justify-between bg-gray-100 p-2 rounded-lg shadow-sm";
-
-          const span = document.createElement('span');
-          span.textContent = item.text;
-          span.className = "flex-grow";
-
-          const buttonContainer = document.createElement('div');
-          buttonContainer.className = "flex space-x-2";
-
-          const editButton = document.createElement('button');
-          editButton.className = "icon-button text-black hover:text-gray-700";
-          editButton.innerHTML = `<svg class="feather feather-edit" fill="none" height="15" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>`;
-
-          const deleteButton = document.createElement('button');
-          deleteButton.className = "icon-button text-black hover:text-gray-700";
-          deleteButton.innerHTML = `<svg height ="15" viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg"><path d="M432 80h-82.38l-34-56.75C306.1 8.827 291.4 0 274.6 0H173.4C156.6 0 141 8.827 132.4 23.25L98.38 80H16C7.125 80 0 87.13 0 96v16C0 120.9 7.125 128 16 128H32v320c0 35.35 28.65 64 64 64h256c35.35 0 64-28.65 64-64V128h16C440.9 128 448 120.9 448 112V96C448 87.13 440.9 80 432 80zM171.9 50.88C172.9 49.13 174.9 48 177 48h94c2.125 0 4.125 1.125 5.125 2.875L293.6 80H154.4L171.9 50.88zM352 464H96c-8.837 0-16-7.163-16-16V128h288v320C368 456.8 360.8 464 352 464zM224 416c8.844 0 16-7.156 16-16V192c0-8.844-7.156-16-16-16S208 183.2 208 192v208C208 408.8 215.2 416 224 416zM144 416C152.8 416 160 408.8 160 400V192c0-8.844-7.156-16-16-16S128 183.2 128 192v208C128 408.8 135.2 416 144 416zM304 416c8.844 0 16-7.156 16-16V192c0-8.844-7.156-16-16-16S288 183.2 288 192v208C288 408.8 295.2 416 304 416z"/></svg>`;
-
-          editButton.addEventListener('click', () => {
-            // Fix: Corrected item reference scope in edit button handler
-            const foundItem = data.find(obj => obj.text === span.textContent);
-            const input = document.createElement('input');
-            input.type = 'text';
-            input.value = span.textContent;
-            input.className = 'editable';
-
-            input.addEventListener('blur', async () => {
-              const updatedText = input.value.trim();
-              span.textContent = updatedText;
-              li.replaceChild(span, input);
-
-              try {
-                const currentUrl = window.location.pathname;
-                const segments = currentUrl.split('/');
-                const collectionName = segments[2]; //
-
-                const response = await fetch(`/dolist/${collectionName}/update-todo/${foundItem._id}`, {
-                  method: 'PUT',
-                  headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                  },
-                  body: new URLSearchParams({
-                    todoText: updatedText
-                  })
-                });
-
-                if (!response.ok) {
-                  throw new Error('Failed to update to-do item');
-                }
-
-                const result = await response.json();
-                console.log('Update successful:', result);
-              } catch (error) {
-                console.error('Error updating to-do item:', error);
-              }
-            });
-
-            input.addEventListener('keypress', (event) => {
-              if (event.key === 'Enter') {
-                input.blur();
-              }
-            });
-
-            li.replaceChild(input, span);
-            input.focus();
-          });
-
-
-          deleteButton.addEventListener('click', async () => {
-            const foundItem = data.find(obj => obj.text === span.textContent);
-            console.log(foundItem)
-            try {
-                const currentUrl = window.location.pathname;
-                const segments = currentUrl.split('/');
-                const collectionName = segments[2]; //
-
-                const response = await fetch(`/dolist/${collectionName}/delete-todo/${foundItem._id}`, {
-                method: 'DELETE',
-              });
-
-              if (response.ok) {
-                todoList.removeChild(li);
-              } else {
-                console.error('Failed to delete to-do item');
-              }
-            } catch (error) {
-              console.error('Error deleting to-do item:', error);
-            }
-          });
-
-          buttonContainer.appendChild(editButton);
-          buttonContainer.appendChild(deleteButton);
-          li.appendChild(span);
-          li.appendChild(buttonContainer);
-          todoList.appendChild(li);
-
-          todoInput.value = '';
-        });
-      });
-
-      todoForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const todoText = todoInput.value.trim();
-
-        if (todoText) {
-          try {
+            // Extract the collection name from the URL
             const currentUrl = window.location.pathname;
-                const segments = currentUrl.split('/');
-                const collectionName = segments[2]; //
-              const response = await fetch(`/dolist/${collectionName}/add-todo`, {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
-              },
-              body: new URLSearchParams({
-                todoText
-              })
-            });
+            const segments = currentUrl.split("/");
+            const collectionName = decodeURIComponent(segments[2]); // Decode the collection name
 
-            const result = await response.json();
+            // Set the header text to the collection name
+            document.getElementById("collection-header").textContent = collectionName;
+        </script>
+        <ul id="todo-list" class="mt-4 space-y-2"></ul>
+        <form id="todo-form" method="POST" class="mt-4 flex">
+            <input
+                type="text"
+                name="todoText"
+                id="todo-input"
+                class="flex-grow border border-gray-300 rounded-l-lg p-2"
+                placeholder="Add new task"
+            />
+            <button
+                type="submit"
+                id="add-todo-button"
+                class="bg-blue-500 text-white p-2 rounded-r-lg hover:bg-blue-600"
+            >
+                Add
+            </button>
+        </form>
+    </div>
+    <script>
+        const todoInput = document.getElementById('todo-input');
+        const todoList = document.getElementById('todo-list');
+        const todoForm = document.getElementById('todo-form');
 
-            if (response.ok) {
-              const li = document.createElement('li');
-              li.className = "flex items-center justify-between bg-gray-100 p-2 rounded-lg shadow-sm";
+        // Fixed JSON embedding in EJS. Added a safe escape for special characters.
+        const data = <%- JSON.stringify(data).replace(/</g, '\\u003c') %>;
 
-              const span = document.createElement('span');
-              span.textContent = todoText;
-              span.className = "flex-grow";
+        // Display existing data
+        document.addEventListener('DOMContentLoaded', () => {
+            data.forEach(item => {
+                const li = document.createElement('li');
+                li.className = "flex items-center justify-between bg-gray-100 p-2 rounded-lg shadow-sm";
 
-              const buttonContainer = document.createElement('div');
-              buttonContainer.className = "flex space-x-2";
+                const span = document.createElement('span');
+                span.textContent = item.text;
+                span.className = "flex-grow";
 
-              const editButton = document.createElement('button');
-              editButton.className = "icon-button text-black hover:text-gray-700";
-              editButton.innerHTML = `<svg class="feather feather-edit" fill="none" height="15" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>`;
+                const buttonContainer = document.createElement('div');
+                buttonContainer.className = "flex space-x-2";
 
-              const deleteButton = document.createElement('button');
-              deleteButton.className = "icon-button text-black hover:text-gray-700";
-              deleteButton.innerHTML = `<svg height ="15" viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg"><path d="M432 80h-82.38l-34-56.75C306.1 8.827 291.4 0 274.6 0H173.4C156.6 0 141 8.827 132.4 23.25L98.38 80H16C7.125 80 0 87.13 0 96v16C0 120.9 7.125 128 16 128H32v320c0 35.35 28.65 64 64 64h256c35.35 0 64-28.65 64-64V128h16C440.9 128 448 120.9 448 112V96C448 87.13 440.9 80 432 80zM171.9 50.88C172.9 49.13 174.9 48 177 48h94c2.125 0 4.125 1.125 5.125 2.875L293.6 80H154.4L171.9 50.88zM352 464H96c-8.837 0-16-7.163-16-16V128h288v320C368 456.8 360.8 464 352 464zM224 416c8.844 0 16-7.156 16-16V192c0-8.844-7.156-16-16-16S208 183.2 208 192v208C208 408.8 215.2 416 224 416zM144 416C152.8 416 160 408.8 160 400V192c0-8.844-7.156-16-16-16S128 183.2 128 192v208C128 408.8 135.2 416 144 416zM304 416c8.844 0 16-7.156 16-16V192c0-8.844-7.156-16-16-16S288 183.2 288 192v208C288 408.8 295.2 416 304 416z"/></svg>`;
+                const editButton = document.createElement('button');
+                editButton.className = "icon-button text-black hover:text-gray-700";
+                editButton.innerHTML = `<svg class="feather feather-edit" fill="none" height="15" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>`;
 
-              editButton.addEventListener('click', () => {
-                const foundItem = result.todo; // Store the newly added item
-                const input = document.createElement('input');
-                input.type = 'text';
-                input.value = span.textContent;
-                input.className = 'editable';
+                const deleteButton = document.createElement('button');
+                deleteButton.className = "icon-button text-black hover:text-gray-700";
+                deleteButton.innerHTML = `<svg height ="15" viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg"><path d="M432 80h-82.38l-34-56.75C306.1 8.827 291.4 0 274.6 0H173.4C156.6 0 141 8.827 132.4 23.25L98.38 80H16C7.125 80 0 87.13 0 96v16C0 120.9 7.125 128 16 128H32v320c0 35.35 28.65 64 64 64h256c35.35 0 64-28.65 64-64V128h16C440.9 128 448 120.9 448 112V96C448 87.13 440.9 80 432 80zM171.9 50.88C172.9 49.13 174.9 48 177 48h94c2.125 0 4.125 1.125 5.125 2.875L293.6 80H154.4L171.9 50.88zM352 464H96c-8.837 0-16-7.163-16-16V128h288v320C368 456.8 360.8 464 352 464zM224 416c8.844 0 16-7.156 16-16V192c0-8.844-7.156-16-16-16S208 183.2 208 192v208C208 408.8 215.2 416 224 416zM144 416C152.8 416 160 408.8 160 400V192c0-8.844-7.156-16-16-16S128 183.2 128 192v208C128 408.8 135.2 416 144 416zM304 416c8.844 0 16-7.156 16-16V192c0-8.844-7.156-16-16-16S288 183.2 288 192v208C288 408.8 295.2 416 304 416z"/></svg>`;
 
-                input.addEventListener('blur', async () => {
-                  const updatedText = input.value.trim();
-                  span.textContent = updatedText;
-                  li.replaceChild(span, input);
+                editButton.addEventListener('click', () => {
+                    // Fix: Corrected item reference scope in edit button handler
+                    const foundItem = data.find(obj => obj.text === span.textContent);
+                    const input = document.createElement('input');
+                    input.type = 'text';
+                    input.value = span.textContent;
+                    input.className = 'editable';
 
-                  try {
-                    const currentUrl = window.location.pathname;
-                    const segments = currentUrl.split('/');
-                    const collectionName = segments[2]; //
-                    const response = await fetch(`/dolist/${collectionName}/update-todo/${foundItem._id}`, {
+                    input.addEventListener('blur', async () => {
+                        const updatedText = input.value.trim();
+                        span.textContent = updatedText;
+                        li.replaceChild(span, input);
 
-                      method: 'PUT',
-                      headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded'
-                      },
-                      body: new URLSearchParams({
-                        todoText: updatedText
-                      })
+                        try {
+                            const currentUrl = window.location.pathname;
+                            const segments = currentUrl.split('/');
+                            const encodedCollectionName = segments[2]; //
+                            const collectionName = decodeURIComponent(encodedCollectionName); 
+
+                            const response = await fetch(`/dolist/${collectionName}/update-todo/${foundItem._id}`, {
+                                method: 'PUT',
+                                headers: {
+                                    'Content-Type': 'application/x-www-form-urlencoded'
+                                },
+                                body: new URLSearchParams({
+                                    todoText: updatedText
+                                })
+                            });
+
+                            if (!response.ok) {
+                                throw new Error('Failed to update to-do item');
+                            }
+
+                            const result = await response.json();
+                            console.log('Update successful:', result);
+                        } catch (error) {
+                            console.error('Error updating to-do item:', error);
+                        }
                     });
 
-                    if (!response.ok) {
-                      throw new Error('Failed to update to-do item');
+                    input.addEventListener('keypress', (event) => {
+                        if (event.key === 'Enter') {
+                            input.blur();
+                        }
+                    });
+
+                    li.replaceChild(input, span);
+                    input.focus();
+                });
+
+                deleteButton.addEventListener('click', async () => {
+                    const foundItem = data.find(obj => obj.text === span.textContent);
+                    console.log(foundItem)
+                    try {
+                        const currentUrl = window.location.pathname;
+                        const segments = currentUrl.split('/');
+                        const encodedCollectionName = segments[2]; //
+                        const collectionName = decodeURIComponent(encodedCollectionName); 
+
+                        const response = await fetch(`/dolist/${collectionName}/delete-todo/${foundItem._id}`, {
+                        method: 'DELETE',
+                    });
+
+                    if (response.ok) {
+                        todoList.removeChild(li);
+                    } else {
+                        console.error('Failed to delete to-do item');
                     }
-
-                    const result = await response.json();
-                    console.log('Update successful:', result);
-                  } catch (error) {
-                    console.error('Error updating to-do item:', error);
-                  }
+                    } catch (error) {
+                    console.error('Error deleting to-do item:', error);
+                    }
                 });
 
-                input.addEventListener('keypress', (event) => {
-                  if (event.key === 'Enter') {
-                    input.blur();
-                  }
-                });
+                buttonContainer.appendChild(editButton);
+                buttonContainer.appendChild(deleteButton);
+                li.appendChild(span);
+                li.appendChild(buttonContainer);
+                todoList.appendChild(li);
 
-                li.replaceChild(input, span);
-                input.focus();
-              });
+                todoInput.value = '';
+            });
+        });
 
-              deleteButton.addEventListener('click', async () => {
-                const foundItem = result.todo;
+        todoForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const todoText = todoInput.value.trim();
 
+            if (todoText) {
                 try {
-                  const currentUrl = window.location.pathname;
-                const segments = currentUrl.split('/');
-                const collectionName = segments[2]; //
+                    const currentUrl = window.location.pathname;
+                    const segments = currentUrl.split('/');
+                    const encodedCollectionName = segments[2]; //
+                    const collectionName = decodeURIComponent(encodedCollectionName); 
+                    const response = await fetch(`/dolist/${collectionName}/add-todo`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: new URLSearchParams({
+                        todoText
+                    })
+                });
 
-                  const response = await fetch(`dolist/delete-todo/${foundItem._id}`, {
-                    method: 'DELETE',
-                  });
+                const result = await response.json();
 
-                  if (response.ok) {
-                    todoList.removeChild(li);
-                  } else {
-                    console.error('Failed to delete to-do item');
-                  }
-                } catch (error) {
-                  console.error('Error deleting to-do item:', error);
+                if (response.ok) {
+                    const li = document.createElement('li');
+                    li.className = "flex items-center justify-between bg-gray-100 p-2 rounded-lg shadow-sm";
+
+                    const span = document.createElement('span');
+                    span.textContent = todoText;
+                    span.className = "flex-grow";
+
+                    const buttonContainer = document.createElement('div');
+                    buttonContainer.className = "flex space-x-2";
+
+                    const editButton = document.createElement('button');
+                    editButton.className = "icon-button text-black hover:text-gray-700";
+                    editButton.innerHTML = `<svg class="feather feather-edit" fill="none" height="15" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>`;
+
+                    const deleteButton = document.createElement('button');
+                    deleteButton.className = "icon-button text-black hover:text-gray-700";
+                    deleteButton.innerHTML = `<svg height ="15" viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg"><path d="M432 80h-82.38l-34-56.75C306.1 8.827 291.4 0 274.6 0H173.4C156.6 0 141 8.827 132.4 23.25L98.38 80H16C7.125 80 0 87.13 0 96v16C0 120.9 7.125 128 16 128H32v320c0 35.35 28.65 64 64 64h256c35.35 0 64-28.65 64-64V128h16C440.9 128 448 120.9 448 112V96C448 87.13 440.9 80 432 80zM171.9 50.88C172.9 49.13 174.9 48 177 48h94c2.125 0 4.125 1.125 5.125 2.875L293.6 80H154.4L171.9 50.88zM352 464H96c-8.837 0-16-7.163-16-16V128h288v320C368 456.8 360.8 464 352 464zM224 416c8.844 0 16-7.156 16-16V192c0-8.844-7.156-16-16-16S208 183.2 208 192v208C208 408.8 215.2 416 224 416zM144 416C152.8 416 160 408.8 160 400V192c0-8.844-7.156-16-16-16S128 183.2 128 192v208C128 408.8 135.2 416 144 416zM304 416c8.844 0 16-7.156 16-16V192c0-8.844-7.156-16-16-16S288 183.2 288 192v208C288 408.8 295.2 416 304 416z"/></svg>`;
+
+                    editButton.addEventListener('click', () => {
+                        const foundItem = result.todo; // Store the newly added item
+                        const input = document.createElement('input');
+                        input.type = 'text';
+                        input.value = span.textContent;
+                        input.className = 'editable';
+
+                        input.addEventListener('blur', async () => {
+                            const updatedText = input.value.trim();
+                            span.textContent = updatedText;
+                            li.replaceChild(span, input);
+
+                            try {
+                                const currentUrl = window.location.pathname;
+                                const segments = currentUrl.split('/');
+                                const encodedCollectionName = segments[2]; //
+                                const collectionName = decodeURIComponent(encodedCollectionName); 
+                                const response = await fetch(`/dolist/${collectionName}/update-todo/${foundItem._id}`, {
+
+                                    method: 'PUT',
+                                    headers: {
+                                        'Content-Type': 'application/x-www-form-urlencoded'
+                                    },
+                                    body: new URLSearchParams({
+                                        todoText: updatedText
+                                    })
+                                });
+
+                                if (!response.ok) {
+                                    throw new Error('Failed to update to-do item');
+                                }
+
+                                const result = await response.json();
+                                console.log('Update successful:', result);
+                            } catch (error) {
+                                console.error('Error updating to-do item:', error);
+                            }
+                        });
+
+                        input.addEventListener('keypress', (event) => {
+                            if (event.key === 'Enter') {
+                                input.blur();
+                            }
+                        });
+
+                        li.replaceChild(input, span);
+                        input.focus();
+                    });
+
+                    deleteButton.addEventListener('click', async () => {
+                        const foundItem = result.todo;
+
+                        try {
+                            const currentUrl = window.location.pathname;
+                            const segments = currentUrl.split('/');
+                            const encodedCollectionName = segments[2]; //
+                            const collectionName = decodeURIComponent(encodedCollectionName); 
+
+                            const response = await fetch(`dolist/delete-todo/${foundItem._id}`, {
+                                method: 'DELETE',
+                            });
+
+                            if (response.ok) {
+                                todoList.removeChild(li);
+                            } else {
+                                console.error('Failed to delete to-do item');
+                            }
+                        } catch (error) {
+                            console.error('Error deleting to-do item:', error);
+                        }
+                    });
+
+                    buttonContainer.appendChild(editButton);
+                    buttonContainer.appendChild(deleteButton);
+                    li.appendChild(span);
+                    li.appendChild(buttonContainer);
+                    todoList.appendChild(li);
+
+                    todoInput.value = '';
+                } else {
+                    console.error('Failed to add to-do item');
                 }
-              });
-
-              buttonContainer.appendChild(editButton);
-              buttonContainer.appendChild(deleteButton);
-              li.appendChild(span);
-              li.appendChild(buttonContainer);
-              todoList.appendChild(li);
-
-              todoInput.value = '';
-            } else {
-              console.error('Failed to add to-do item');
+                } catch (error) {
+                console.error('Error adding to-do item:', error);
+                }
             }
-          } catch (error) {
-            console.error('Error adding to-do item:', error);
-          }
-        }
-      });
+        });
     </script>
-  </body>
+</body>
 </html>
