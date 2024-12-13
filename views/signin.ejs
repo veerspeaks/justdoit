@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SignIn</title>
+    <link href="/css/tailwind.css" rel="stylesheet" />
+    <link href="/css/additional.css" rel="stylesheet" />
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+    <style>
+        /* Animated Gradient Background */
+        .gradient-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, #ff6b6b, #f06595, #845ec2, #00c9a7, #ffde7d);
+            background-size: 400% 400%;
+            animation: gradientAnimation 15s ease infinite;
+            z-index: -1; /* Behind the form content */
+            border-radius: 1rem; /* Match the form's rounded corners */
+        }
+
+        @keyframes gradientAnimation {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="flex justify-center " style="height:100px">
+        <%- include('partials/_navbar', { isSignInPage: true }) %>
+      </div>
+        
+    
+    <div class="flex flex-col items-center justify-center" style="height: 75vh; background-image: url('/src/assets/flame-astronaut-in-space-suit-heading-for-space-exploration.gif'); background-size: cover; background-position: center;">
+        <div class="w-full max-w-md bg-white rounded-lg shadow-md p-2 border" style="box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+            
+            <h1 class="text-3xl font-bold text-center text-gray-800 " style="font-size: 2rem; margin-bottom: 0.5rem;">Hola!</h1>
+            <h2 class="text-sm font-bold text-center text-gray-800 mb-8" style="font-size: 1rem; margin-bottom: 2rem;">Please sign in to continue</h2>
+            <form class="space-y-6" id="signinForm">
+                <div class="flex flex-col items-center mb-4">
+                    <label for="email" class="block text-sm font-medium text-gray-700" style="margin-bottom: 0.5rem;">Email</label>
+                    <input type="email" id="email" name="email" required class="mt-1 block px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 rounded-lg" style="width: 80%;">
+                </div>
+                <div class="flex flex-col items-center mb-4">
+                    <label for="password" class="block text-sm font-medium text-gray-700" style="margin-bottom: 0.5rem";>Password</label>
+                    <input type="password" id="password" name="password" required class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 rounded-lg" style="width: 80%;">
+                </div>
+                <div class="flex flex-col items-center mb-4">
+                    <button type="submit" class="py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 rounded-lg" style="width: 20%; background-color: #17520c; margin-top: 1rem;">Log In</button>
+                </div>
+            </form>
+            <p class="mt-4 text-center text-sm text-gray-600">
+                Don't have an account? <a href="/signup" class="font-medium text-indigo-600 hover:text-indigo-500" style="text-decoration: underline; color: #121fc7;">Sign up</a>
+            </p>
+
+            <!-- Add Social Login Buttons -->
+            <div class="flex flex-col items-center mt-4">
+                <button id="googleSignIn" class="py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-black         bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 rounded-lg" style="width: 50%; margin-top: 1rem;">
+                    Sign in with Google
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="flex flex-col items-center justify-center bg-gray-100" style="height: 5vh;">
+        <% if (success_msg) { %>
+            <div class="alert alert-success"><%= success_msg %></div>
+        <% } %>
+
+        <% if (error_msg) { %>
+            <div class="alert alert-danger">
+                <%= error_msg %>
+            </div>
+        <% } %>
+    </div>
+    
+    <script>
+    const firebaseConfig = {
+        apiKey: "<%= process.env.FIREBASE_API_KEY %>",
+        authDomain: "<%= process.env.FIREBASE_AUTH_DOMAIN %>",
+        projectId: "<%= process.env.FIREBASE_PROJECT_ID %>",
+        storageBucket: "<%= process.env.FIREBASE_STORAGE_BUCKET %>",
+        messagingSenderId: "<%= process.env.FIREBASE_MESSAGING_SENDER_ID %>",
+        appId: "<%= process.env.FIREBASE_APP_ID %>"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+
+    document.getElementById('signinForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+
+        try {
+            const userCredential = await firebase.auth().signInWithEmailAndPassword(email, password);
+            const idToken = await userCredential.user.getIdToken();
+            
+            // Send token to backend
+            const response = await fetch('/signinPost', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ idToken })
+            });
+
+            if (response.ok) {
+                window.location.href = '/';
+            } else {
+                const data = await response.json();
+                alert(data.error || 'Sign-in failed');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert(error.message);
+        }
+    });
+
+    // Google Sign-In Handler
+    document.getElementById('googleSignIn').addEventListener('click', async () => {
+        const provider = new firebase.auth.GoogleAuthProvider();
+
+        try {
+            
+            const result = await firebase.auth().signInWithPopup(provider);
+            const idToken = await result.user.getIdToken();
+
+            // Send token to backend
+            const response = await fetch('/signinPost', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ idToken })
+            });
+
+            if (response.ok) {
+                window.location.href = '/';
+            } else {
+                const data = await response.json();
+                alert(data.error || 'Sign-in failed');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert(error.message);
+        }
+    });
+    </script>
+</body>
+<%- include('partials/_footer') %>
+</html>
+

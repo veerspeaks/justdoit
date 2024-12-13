@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Just Do It</title>
+    <link href="/css/tailwind.css" rel="stylesheet" />
+    <link href="/css/additional.css" rel="stylesheet" />
+    
+  </head>
+  <body class="flex flex-col">
+    <div class="flex justify-center " style="height:100px">
+      <%- include('partials/_navbar') %>
+    </div>
+    
+    
+    <div class="" style="border-top-color: #00a33e;">
+      <div class="flex">
+        
+      </div>
+
+      <div class="flex flex-col dash">
+        <div style="width: 100%"><%- include('partials/_dashboard') %></div>
+      </div>
+      <style>
+        @media (min-width: 768px) {
+          .dash {
+            flex-direction: row;
+          }
+        }
+      </style>
+    </div>
+    <div>
+      <%- include('partials/_createNewNote') %>
+    </div>
+      
+  </body>
+  <%- include('partials/_footer') %>
+</html>

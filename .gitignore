@@ -1,0 +1,4 @@
+node_modules/
+.env
+/config/todo-40485-firebase-adminsdk-8zs02-8eaa1a1aa5.json
+node_modules
